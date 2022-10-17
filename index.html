@@ -1,0 +1,153 @@
+<html>
+<body>
+	<hr />
+	<h3>Enter Name here: </h3>
+	<input id="name" type="text" /><br /><br />
+
+	<button onclick="calculate(); calculateAllCombinations()">Find Total Number</button>
+
+	<h3 id="output"></h3>
+	<hr />
+
+	<button onclick="calculateAllCombinations()">Get All combinations</button><br /><br />
+
+	<ul id="combinations"></ul>
+	<hr />
+
+	<button onclick="displayLetters()">Display Letters</button>
+	<button onclick="clearLetters()">Hide Letters</button><br /><br />
+
+	<ul id="ul"></ul>
+	<hr />
+
+	<script>
+		let arr = { 'A': 1, 'B': 2, 'C': 11, 'D': 4, 'E': 5, 'F': 17, 'G': 3, 'H': 8, 'I': 10, 'J': 10, 'K': 11, 'L': 12, 'M': 13, 'N': 14, 'O': 16, 'P': 17, 'Q': 19, 'R': 20, 'S': 21, 'T': 22, 'U': 6, 'V': 6, 'W': 6, 'X': 15, 'Y': 10, 'Z': 7 };
+		let lastNames = ['Ram', 'Ram C R', 'Puneeth', 'Puneeth Ram', 'Ramaprasad', 'R Prasad', 'Prasad', 'Prasad C R'];
+	
+		let input = document.getElementById("name");
+		input.addEventListener("keypress", function (event) {
+			if (event.key === "Enter") {
+				calculate();
+				calculateAllCombinations();
+			}
+		});
+	
+		function displayLetters() {
+			clearLetters();
+			let ul = document.getElementById("ul");
+			Object.entries(arr).forEach(entry => {
+				let li = document.createElement("li");
+				li.innerHTML = entry[0] + ' = ' + entry[1];
+				ul.append(li);
+			});
+		}
+	
+		function clearLetters() {
+			let ul = document.getElementById("ul");
+			ul.innerHTML = '';
+		}
+	
+		function calculate(fullName) {
+			var name = fullName ? fullName : document.getElementById("name").value;
+			var total = 0;
+			for (var i = 0; i < name.length; i++) {
+				if (!name[i] || name[i] == ' ')
+					continue;
+	
+				var letter = name[i].toUpperCase();
+				total = total + arr[letter];
+			}
+	
+			let grandTotal = calculateToSingleDigit(total);
+			while (grandTotal > 9) {
+				grandTotal = calculateToSingleDigit(grandTotal);
+			}
+	
+			if (fullName)
+				return grandTotal;
+	
+			var output = document.getElementById("output");
+			output.classList.remove("match");
+			if (grandTotal === 5)
+				output.classList.add("match");
+			output.innerHTML = total + ' => ' + grandTotal;
+		}
+	
+		function calculateToSingleDigit(input) {
+			let temp = input, grandTotal = 0;
+			while (temp > 9) {
+				let remainder = temp % 10
+				temp = Math.floor(temp / 10);
+				grandTotal = grandTotal + remainder;
+			}
+	
+			grandTotal = grandTotal + temp;
+			return grandTotal;
+		}
+	
+		function calculateAllCombinations() {
+			let ul = document.getElementById("combinations");
+			ul.innerHTML = '';
+			var name = document.getElementById("name").value;
+	
+			lastNames.forEach(lastName => {
+				let fullName = name + ' ' + lastName;
+				let nameTotal = calculate(fullName);
+	
+				let li = document.createElement("li");
+				if (nameTotal === 5)
+					li.classList.add("match");
+	
+				li.innerHTML = fullName + ' => ' + nameTotal;
+				ul.append(li);
+			});
+		}
+	</script>
+	
+	<style>
+		button {
+			background-color: #4CAF50;
+			/* Green */
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			cursor: pointer;
+		}
+	
+		input[type=text] {
+			width: 50%;
+			padding: 12px 20px;
+			margin: 8px 0;
+			box-sizing: border-box;
+		}
+	
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+	
+		li {
+			float: left;
+			padding: 20px;
+			background-color: rgb(211, 223, 189);
+		}
+	
+		.match {
+			background-color: green;
+			color: white;
+			text-decoration: solid;
+		}
+	
+		#output {
+			padding: 10px;
+			width: 100px;
+		}
+	</style>
+</body>
+</html>
